@@ -25,6 +25,7 @@ class PagerAction(Callback, Action):
                                                 #      "id": Page ID. All actions with this ID will be enabled
                                                 #      "color": Page color. LEDs and label will be colored this way (for the brightness, there is a separate parameter)
                                                 #      "text": Label text for the page
+                                                #      "textColor": Label text color.
                                                 # }
 
                  select_page = None,            # If None, the pages will be rotated. If set to a page ID, the action will select the passed page (use a 
@@ -162,7 +163,10 @@ class PagerAction(Callback, Action):
                     self.label.back_color = page_current["color"]
                 else:
                     self.label.back_color = (255, 255, 255)
-        
+
+            if self.label.text_color:
+                self.label.text_color = page_current["textColor"] if "textColor" in page_current else (0, 0, 0)
+
         # Update all proxies, too
         for proxy in self.__proxies:
             proxy.update_displays()
