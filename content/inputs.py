@@ -1,87 +1,69 @@
-##############################################################################################################################################
-#
-# Definition of actions for switches
-# (Galgo usage of Kemper)
-#
-##############################################################################################################################################
-
+#!/usr/bin/env python3
+from pyswitch.clients.local.actions.custom import CUSTOM_MESSAGE
 from pyswitch.hardware.devices.pa_midicaptain_mini_6 import *
+from display import DISPLAY_STATUS
 
-from display import DISPLAY_HEADER_1, DISPLAY_HEADER_2, DISPLAY_FOOTER_1, DISPLAY_FOOTER_2
-
-from pyswitch.clients.kemper.actions.bank_up_down import BANK_UP, BANK_DOWN
-from pyswitch.clients.kemper.actions.rig_up_down import RIG_UP, RIG_DOWN
-
-from pyswitch.clients.kemper.actions.rig_select import RIG_SELECT, RIG_SELECT_DISPLAY_TARGET_RIG
-from pyswitch.clients.kemper.actions.morph import MORPH_DISPLAY
-
-from pyswitch.clients.kemper.actions.rig_volume_boost import RIG_VOLUME_BOOST
-from pyswitch.clients.kemper.actions.tuner import TUNER_MODE
-
-# Defines the switch assignments
 Inputs = [
-
-    # Switch 1
-    {
-        "assignment": PA_MIDICAPTAIN_MINI_SWITCH_1,
-        "actions": [
-            BANK_DOWN(
-                display = DISPLAY_HEADER_1
-            )
-        ]
-    },
-
-    # Switch 2
-    {
-        "assignment": PA_MIDICAPTAIN_MINI_SWITCH_2,
-        "actions": [
-            BANK_UP(
-                display = DISPLAY_HEADER_2
-            )
-        ]
-    },
-
-    # Switch 3
-    {
-        "assignment": PA_MIDICAPTAIN_MINI_SWITCH_3,
-        "actions": [
-            TUNER_MODE()
-        ]
-    },
-
-
-    # Switch A
+    # Clean
     {
         "assignment": PA_MIDICAPTAIN_MINI_SWITCH_A,
         "actions": [
-            RIG_SELECT(
-                rig = 4,
-                display_mode = RIG_SELECT_DISPLAY_TARGET_RIG,
-				display = DISPLAY_FOOTER_1
-            )
+            # MS-4: PC #0 → channel 3 + screen update
+            CUSTOM_MESSAGE(
+                message = [194, 0],
+                display = DISPLAY_STATUS,
+                text = "CLEAN",
+                color = (255, 255, 255)
+            ),
+
+            # CBA Preamp MkII: CC#102 val 0 → channel 1
+            CUSTOM_MESSAGE(message = [176, 102, 0]),
+
+            # OneControl: Loop 1 off (PC#10), Loop 2 off (PC#20) → channel 2
+            CUSTOM_MESSAGE(message = [193, 10]),
+            CUSTOM_MESSAGE(message = [193, 20]),
         ],
     },
 
-    # Switch B
+    # Rhythm
     {
         "assignment": PA_MIDICAPTAIN_MINI_SWITCH_B,
         "actions": [
-            RIG_SELECT(
-                rig = 5,
-                display_mode = RIG_SELECT_DISPLAY_TARGET_RIG,
-				display = DISPLAY_FOOTER_2
-            )
+            # MS-4: PC #1 → channel 3 + screen update
+            CUSTOM_MESSAGE(
+                message = [194, 1],
+                display = DISPLAY_STATUS,
+                text = "RHYTHM",
+                color = (255, 140, 0)
+            ),
+
+            # CBA Preamp MkII: CC#102 val 127 → channel 1
+            CUSTOM_MESSAGE(message = [176, 102, 127]),
+
+            # OneControl: Loop 1 on (PC#11), Loop 2 off (PC#20) → channel 2
+            CUSTOM_MESSAGE(message = [193, 11]),
+            CUSTOM_MESSAGE(message = [193, 20]),
         ],
     },
 
-    # Switch C
+    # Lead
     {
         "assignment": PA_MIDICAPTAIN_MINI_SWITCH_C,
         "actions": [
-            RIG_VOLUME_BOOST(
-                boost_volume = 0.625  # +3dB          # Value im [0..1] representing the Rig Volume Knob. Examples: 0.5 = 0dB (no boost), 0.75 = +6dB, 1.0 = +12dB
-            )
-        ]
-    }
+            # MS-4: PC #2 → channel 3 + screen update
+            CUSTOM_MESSAGE(
+                message = [194, 2],
+                display = DISPLAY_STATUS,
+                text = "LEAD",
+                color = (255, 60, 60)
+            ),
 
+            # CBA Preamp MkII: CC#102 val 127 → channel 1
+            CUSTOM_MESSAGE(message = [176, 102, 127]),
+
+            # OneControl: Loop 1 on (PC#11), Loop 2 on (PC#21) → channel 2
+            CUSTOM_MESSAGE(message = [193, 11]),
+            CUSTOM_MESSAGE(message = [193, 21]),
+        ],
+    }
 ]
