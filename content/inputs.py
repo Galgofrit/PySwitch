@@ -1,69 +1,142 @@
 #!/usr/bin/env python3
-from pyswitch.clients.local.actions.custom import CUSTOM_MESSAGE
 from pyswitch.hardware.devices.pa_midicaptain_mini_6 import *
+from pyswitch.clients.local.actions.pager import PagerAction
+from pyswitch.clients.local.actions.custom import CUSTOM_MESSAGE
+from pyswitch.colors import Colors
 from display import DISPLAY_STATUS
 
+pager = PagerAction(
+    pages = [
+        {
+            "id": "clean",
+            "text": "CLEAN",
+            #  "color": (255, 255, 255),         # background
+            "color": Colors.BLUE,
+            "textColor": Colors.WHITE            # text
+        },
+        {
+            "id": "rhythm",
+            "text": "RHYTHM",
+            "color": Colors.ORANGE,
+            "textColor": Colors.BLACK
+        },
+        {
+            "id": "lead",
+            "text": "LEAD",
+            "color": Colors.RED,
+            "textColor": Colors.WHITE
+        }
+    ],
+    select_page = "clean",
+    display = DISPLAY_STATUS
+)
+
 Inputs = [
-    # Clean
+    # Switch A: main pager (cycles through all)
     {
         "assignment": PA_MIDICAPTAIN_MINI_SWITCH_A,
         "actions": [
+            pager,
+
             # MS-4: PC #0 → channel 3 + screen update
             CUSTOM_MESSAGE(
-                message = [194, 0],
-                display = DISPLAY_STATUS,
-                text = "CLEAN",
-                color = (255, 255, 255)
+                message=[194, 0],
+                id="clean",
+                enable_callback=pager.enable_callback
             ),
 
             # CBA Preamp MkII: CC#102 val 0 → channel 1
-            CUSTOM_MESSAGE(message = [176, 102, 0]),
+            CUSTOM_MESSAGE(
+                message=[176, 102, 0],
+                id="clean",
+                enable_callback=pager.enable_callback
+            ),
 
-            # OneControl: Loop 1 off (PC#10), Loop 2 off (PC#20) → channel 2
-            CUSTOM_MESSAGE(message = [193, 10]),
-            CUSTOM_MESSAGE(message = [193, 20]),
-        ],
+            # OneControl: Loop 1 off (val 10) → channel 2
+            CUSTOM_MESSAGE(
+                message=[193, 10],
+                id="clean",
+                enable_callback=pager.enable_callback
+            ),
+
+            # OneControl: Loop 2 off (val 20) → channel 2
+            CUSTOM_MESSAGE(
+                message=[193, 20],
+                id="clean",
+                enable_callback=pager.enable_callback
+            )
+        ]
     },
 
-    # Rhythm
+    # Switch B: direct to rhythm
     {
         "assignment": PA_MIDICAPTAIN_MINI_SWITCH_B,
         "actions": [
+            pager.proxy("rhythm"),
+
             # MS-4: PC #1 → channel 3 + screen update
             CUSTOM_MESSAGE(
-                message = [194, 1],
-                display = DISPLAY_STATUS,
-                text = "RHYTHM",
-                color = (255, 140, 0)
+                message=[194, 1],
+                id="rhythm",
+                enable_callback=pager.enable_callback
             ),
 
             # CBA Preamp MkII: CC#102 val 127 → channel 1
-            CUSTOM_MESSAGE(message = [176, 102, 127]),
+            CUSTOM_MESSAGE(
+                message=[176, 102, 127],
+                id="rhythm",
+                enable_callback=pager.enable_callback
+            ),
 
-            # OneControl: Loop 1 on (PC#11), Loop 2 off (PC#20) → channel 2
-            CUSTOM_MESSAGE(message = [193, 11]),
-            CUSTOM_MESSAGE(message = [193, 20]),
-        ],
+            # OneControl: Loop 1 on (val 11) → channel 2
+            CUSTOM_MESSAGE(
+                message=[193, 11],
+                id="rhythm",
+                enable_callback=pager.enable_callback
+            ),
+
+            # OneControl: Loop 2 off (val 20) → channel 2
+            CUSTOM_MESSAGE(
+                message=[193, 20],
+                id="rhythm",
+                enable_callback=pager.enable_callback
+            )
+        ]
     },
 
-    # Lead
+    # Switch C: direct to lead
     {
         "assignment": PA_MIDICAPTAIN_MINI_SWITCH_C,
         "actions": [
+            pager.proxy("lead"),
+
             # MS-4: PC #2 → channel 3 + screen update
             CUSTOM_MESSAGE(
-                message = [194, 2],
-                display = DISPLAY_STATUS,
-                text = "LEAD",
-                color = (255, 60, 60)
+                message=[194, 2],
+                id="lead",
+                enable_callback=pager.enable_callback
             ),
 
             # CBA Preamp MkII: CC#102 val 127 → channel 1
-            CUSTOM_MESSAGE(message = [176, 102, 127]),
+            CUSTOM_MESSAGE(
+                message=[176, 102, 127],
+                id="lead",
+                enable_callback=pager.enable_callback
+            ),
 
-            # OneControl: Loop 1 on (PC#11), Loop 2 on (PC#21) → channel 2
-            CUSTOM_MESSAGE(message = [193, 11]),
-            CUSTOM_MESSAGE(message = [193, 21]),
-        ],
+            # OneControl: Loop 1 on (val 11) → channel 2
+            CUSTOM_MESSAGE(
+                message=[193, 11],
+                id="lead",
+                enable_callback=pager.enable_callback
+            ),
+
+            # OneControl: Loop 2 on (val 21) → channel 2
+            CUSTOM_MESSAGE(
+                message=[193, 21],
+                id="lead",
+                enable_callback=pager.enable_callback
+            )
+        ]
     }
 ]
