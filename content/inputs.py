@@ -38,9 +38,9 @@ Inputs = [
         "actions": [
             pager,
 
-            # MS-4: PC #0 → channel 3 + screen update
+            # Nobles MS-4: PC #0 → channel 10 - 5150ii - select clean channel
             CUSTOM_MESSAGE(
-                message=[194, 0],
+                message=[201, 0],
                 id="clean",
                 enable_callback=pager.enable_callback
             ),
@@ -74,9 +74,9 @@ Inputs = [
         "actions": [
             pager.proxy("rhythm"),
 
-            # MS-4: PC #1 → channel 3 + screen update
+            # Nobles MS-4: PC #1 → channel 10 - 5150ii - select lead channel
             CUSTOM_MESSAGE(
-                message=[194, 1],
+                message=[201, 1],
                 id="rhythm",
                 enable_callback=pager.enable_callback
             ),
@@ -110,9 +110,9 @@ Inputs = [
         "actions": [
             pager.proxy("lead"),
 
-            # MS-4: PC #2 → channel 3 + screen update
+            # Nobles MS-4: PC #2 → channel 10 - 5150ii - select lead channel
             CUSTOM_MESSAGE(
-                message=[194, 2],
+                message=[201, 2],
                 id="lead",
                 enable_callback=pager.enable_callback
             ),
